@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [JwtModule.register({
+    global: true, // Make the JWT module available globally
     secret: 'secretKey', // Use a strong secret key in production
     signOptions: { expiresIn: '2h', algorithm: 'HS256' }, // Token expiration time
   })],
