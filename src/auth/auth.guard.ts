@@ -9,12 +9,14 @@ import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CaslAbilityService } from 'src/casl/casl-ability/casl-ability.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private prismaService: PrismaService,
+    private abilityService: CaslAbilityService,
   ) {}
 
   async canActivate(
@@ -33,6 +35,7 @@ export class AuthGuard implements CanActivate {
         email: string;
         role: Role;
         sub: string;
+        permissions:  string[];
       }>(token, { algorithms: ['HS256'] });
 
       const user = await this.prismaService.user.findUnique({
@@ -44,6 +47,7 @@ export class AuthGuard implements CanActivate {
       }
 
       request.user = user;
+      this.abilityService.createForUser(user);
       return true;
     } catch (e) {
       console.error('Token verification failed:', e);

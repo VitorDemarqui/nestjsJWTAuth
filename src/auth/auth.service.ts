@@ -3,13 +3,15 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto } from './login.dto';
 import bcrypt from 'bcrypt';
-import { access } from 'fs';
+import { CaslAbilityService } from 'src/casl/casl-ability/casl-ability.service';
+import { packRules } from '@casl/ability/extra';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prismaService: PrismaService,
+    private abilityService: CaslAbilityService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -30,11 +32,13 @@ export class AuthService {
       throw new Error('Invalid email or password');
     }
 
+    const ability = this.abilityService.createForUser(user);
     const token = this.jwtService.sign({
         name: user.name,
         email: user.email,
         role: user.role,
         sub: user.id,
+        permissions: packRules(ability.rules),
     });
 
     return { access_token: token };

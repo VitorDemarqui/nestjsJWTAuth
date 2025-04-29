@@ -104,7 +104,7 @@ Authorization: Bearer {{tokenAdmin}}
 {
     "title": "My first post",
     "content": "This is the content of my first post.",
-    "published": false
+    "published": true
 }
 
 ###
@@ -112,8 +112,8 @@ GET http://localhost:3000/posts
 Authorization: Bearer {{tokenReader}}
 
 ###
-GET http://localhost:3000/posts/cm8z70heh0001s9r7ick5369u
-Authorization: Bearer {{tokenReader}}
+GET http://localhost:3000/posts/cma1v05090001wowucbjmdo9v
+Authorization: Bearer {{tokenAdmin}}
 
 ###
 GET http://localhost:3000/users
