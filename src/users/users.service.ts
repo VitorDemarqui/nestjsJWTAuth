@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { CaslAbilityService } from 'src/casl/casl-ability/casl-ability.service';
+import { accessibleBy } from '@casl/prisma';
 
 @Injectable()
 export class UsersService {
@@ -28,7 +29,17 @@ export class UsersService {
   }
 
   findAll() {
-    return this.prismaService.user.findMany();
+    const ability = this.abilityService.ability;
+
+    if (!ability.can('read', 'User')) {
+      throw new ForbiddenException('You do not have permission to read users');
+    }
+
+    return this.prismaService.user.findMany({
+      where: {
+        AND: [accessibleBy(ability).User],
+      }
+    });
   }
 
   findOne(id: string) {

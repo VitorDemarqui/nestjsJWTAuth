@@ -8,6 +8,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -25,16 +29,18 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      Role     @default(READER)
+  role      Role    @default(READER)
+  /// [PermissionsList]
+  permissions Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Posts     Post[]
+  Post      Post[]
 }
 
 model Post {
   id        String   @id @default(cuid())
   title     String
-  content   String @db.Text
+  content   String   @db.Text
   published Boolean  @default(false)
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])

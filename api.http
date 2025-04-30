@@ -48,7 +48,7 @@ Authorization: Bearer {{tokenAdmin}}
 
 ###
 GET http://localhost:3000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQHVzZXIuY29tIiwiaWF0IjoxNzQ1NjI5Mzk5LCJleHAiOjE3NDU2MzY1OTl9.OdddxJHFlOQD_TYwmclJPmFm0OpqoUhCg9nM24ACAXY
+Authorization: Bearer {{tokenAdmin}}
 
 ###
 GET http://localhost:3000/users/cm9xh99hr0000l5u3okhgelfl

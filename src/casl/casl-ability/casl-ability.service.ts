@@ -33,7 +33,7 @@ const rolePermissionsMap: Record<Role, DefinePermissions> = {
     WRITER: (user, { can }) => {
         can('read', 'Post', { authorId: user.id });
         can('create', 'Post');
-        can('update', 'Post' );
+        can('update', 'Post', { authorId: user.id });
     },
     READER: (user, { can }) => {
         can('read', 'Post', { published: true });
@@ -46,9 +46,18 @@ export class CaslAbilityService {
 
     createForUser(user: User) {
         const builder = new AbilityBuilder<AppAbility>(createPrismaAbility);
+        user.permissions?.forEach(permission => {
+            builder.can(permission.action, permission.resource, permission.condition);
+        })
         rolePermissionsMap[user.role](user, builder);
         this.ability = builder.build();
 
         return this.ability;
     }
 }
+
+//new CaslAbilityService().createForUser().can('create', 'Post'); // true
+
+//rbac
+//abac
+//acl - action control list (s3)
